@@ -1,29 +1,23 @@
-package ae.exafy.taskmanager.model;
+package ae.exafy.taskmanager.controller.response;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import ae.exafy.taskmanager.model.Category;
+import ae.exafy.taskmanager.model.Priority;
+import ae.exafy.taskmanager.model.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
 
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Builder
+@Data
 @ToString
-@Entity
-public class Task {
+public class TaskResponse {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
@@ -39,5 +33,4 @@ public class Task {
     private Category category;
 
     private String assignedUser;
-
 }
