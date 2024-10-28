@@ -61,6 +61,6 @@ public class TaskService {
                                        final Integer pageSize) {
         Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, sort);
-        return taskRepository.findAllByStatusIn(statusList, pageRequest, sort).map(taskConverter::convertToResponse);
+        return taskRepository.findAllByStatusIn(statusList, pageRequest).map(taskConverter::convertToResponse);
     }
 }
