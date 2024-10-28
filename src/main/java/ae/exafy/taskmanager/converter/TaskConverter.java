@@ -1,8 +1,8 @@
 package ae.exafy.taskmanager.converter;
 
-import ae.exafy.taskmanager.model.Task;
-import ae.exafy.taskmanager.controller.response.TaskResponse;
 import ae.exafy.taskmanager.controller.request.TaskRequest;
+import ae.exafy.taskmanager.controller.response.TaskResponse;
+import ae.exafy.taskmanager.model.Task;
 import org.springframework.stereotype.Component;
 
 @Component

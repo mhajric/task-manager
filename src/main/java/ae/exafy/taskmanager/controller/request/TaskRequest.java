@@ -3,13 +3,11 @@ package ae.exafy.taskmanager.controller.request;
 import ae.exafy.taskmanager.model.Category;
 import ae.exafy.taskmanager.model.Priority;
 import ae.exafy.taskmanager.model.Status;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
-@Getter
+@Data
 public class TaskRequest {
 
     private String title;

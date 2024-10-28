@@ -2,10 +2,12 @@ package ae.exafy.taskmanager.controller;
 
 import ae.exafy.taskmanager.controller.request.TaskRequest;
 import ae.exafy.taskmanager.controller.response.TaskResponse;
+import ae.exafy.taskmanager.model.Status;
 import ae.exafy.taskmanager.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,14 +34,14 @@ public class TaskController {
     @PostMapping
     public ResponseEntity<TaskResponse> createTask(final @RequestBody TaskRequest taskRequest) {
         final TaskResponse taskResponse = taskService.createTask(taskRequest);
-        return ResponseEntity.ok(taskResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(taskResponse);
     }
 
     @GetMapping
-    public ResponseEntity<Page<TaskResponse>> getTasks(@RequestParam(name = "status", defaultValue = "*") List<String> statusList,
+    public ResponseEntity<Page<TaskResponse>> getTasks(@RequestParam(name = "status", required = false) List<Status> statusList,
                                                        @RequestParam(defaultValue = "priority") String sortBy,
                                                        @RequestParam(defaultValue = "asc") String order,
-                                                       @RequestParam(defaultValue = "1") Integer pageNumber,
+                                                       @RequestParam(defaultValue = "0") Integer pageNumber,
                                                        @RequestParam(defaultValue = "10") Integer pageSize) {
         final Page<TaskResponse> tasks = taskService.getTasks(statusList, sortBy, order, pageNumber, pageSize);
         return ResponseEntity.ok(tasks);

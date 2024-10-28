@@ -54,13 +54,18 @@ public class TaskService {
         return taskConverter.convertToResponse(savedTask);
     }
 
-    public Page<TaskResponse> getTasks(final List<String> statusList,
+    public Page<TaskResponse> getTasks(final List<Status> statusList,
                                        final String sortBy,
                                        final String direction,
                                        final Integer pageNumber,
                                        final Integer pageSize) {
         Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, sort);
-        return taskRepository.findAllByStatusIn(statusList, pageRequest).map(taskConverter::convertToResponse);
+
+        if (statusList == null || statusList.isEmpty()) {
+            return taskRepository.findAll(pageRequest).map(taskConverter::convertToResponse);
+        } else {
+            return taskRepository.findAllByStatusIn(statusList, pageRequest).map(taskConverter::convertToResponse);
+        }
     }
 }
