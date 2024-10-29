@@ -24,9 +24,12 @@ public class TaskService {
 
     private final TaskConverter taskConverter;
 
+    private final NotificationService notificationService;
+
     public TaskResponse createTask(final TaskRequest taskRequest) {
         final Task task = taskConverter.convertToTask(taskRequest);
         final Task savedTask = taskRepository.save(task);
+        notificationService.notifyTaskAssignment(savedTask);
         return taskConverter.convertToResponse(savedTask);
     }
 
@@ -40,6 +43,12 @@ public class TaskService {
         task.setCategory(taskRequest.getCategory());
         task.setAssignedUser(taskRequest.getAssignedUser());
         final Task savedTask = taskRepository.save(task);
+
+        if (!task.getAssignedUser().equals(taskRequest.getAssignedUser())) {
+            notificationService.notifyTaskAssignment(savedTask);
+        }
+        notificationService.rescheduleTaskNotifications(savedTask);
+
         return taskConverter.convertToResponse(savedTask);
     }
 
@@ -67,5 +76,9 @@ public class TaskService {
         } else {
             return taskRepository.findAllByStatusIn(statusList, pageRequest).map(taskConverter::convertToResponse);
         }
+    }
+
+    public List<Task> getAllTasks() {
+        return taskRepository.findAll();
     }
 }

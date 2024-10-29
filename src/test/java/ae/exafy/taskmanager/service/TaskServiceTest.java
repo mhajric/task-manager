@@ -24,6 +24,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -31,6 +32,9 @@ public class TaskServiceTest {
 
     @Mock
     private TaskRepository taskRepository;
+
+    @Mock
+    private NotificationService notificationService;
 
     @Mock
     private TaskConverter taskConverter;
@@ -76,6 +80,8 @@ public class TaskServiceTest {
         verify(taskRepository).save(task);
         verify(taskConverter).convertToTask(taskRequest);
         verify(taskConverter).convertToResponse(task);
+
+        verify(notificationService).notifyTaskAssignment(task);
     }
 
     @Test
@@ -90,6 +96,10 @@ public class TaskServiceTest {
         verify(taskRepository).findById(1L);
         verify(taskRepository).save(task);
         verify(taskConverter).convertToResponse(task);
+
+        verify(notificationService, never()).notifyTaskAssignment(task);
+
+        verify(notificationService).rescheduleTaskNotifications(task);
     }
 
     @Test
