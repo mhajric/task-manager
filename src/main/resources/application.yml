@@ -12,13 +12,11 @@ spring:
             enabled: true
 
     mail:
-        host: smtp.example.com
-        port: 587
-        username: your_email@example.com
-        password: your_password
+        host: ${MAIL_HOST:localhost}
+        port: ${MAIL_PORT:26}
+        username: ${MAIL_USERNAME}
+        password: ${MAIL_PASSWORD}
         properties:
-            mail:
-                smtp:
-                    auth: true
-                    starttls:
-                        enable: true
+            mail.smtp.auth: ${MAIL_AUTH:false}
+            mail.smtp.starttls.enable: ${MAIL_STARTTLS:false}
+            mail.smtp.ssl.trust: ${MAIL_SSL_TRUST:localhost}

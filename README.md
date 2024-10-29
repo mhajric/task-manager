@@ -58,11 +58,44 @@ Handle pagination for task retrieval when there are many tasks.
 
 ## Getting Started
 
-To build project and run tests, run:
+Requirements:
+- Java (version 17)
+- Docker (in order to run smtp4dev)
+- git
+
+Clone this repo:  
+`git clone git@github.com:mhajric/task-manager.git`
+
+To build project and run tests, run:  
 `mvn clean install`
 
-Then run app using:
+Start smtp4dev:  
+`docker run --rm -it -p 3000:80 -p 26:25 rnwood/smtp4dev:v3`
+
+Open smtp4dev web interface:  
+http://localhost:3000
+
+Then run app using:  
 `./mvnw spring-boot:run`
 
 Access swagger-ui:
 http://localhost:8080/swagger-ui/index.html
+
+There are two users registered: '**user**' and '**admin**' (both passwords are '**password**').  
+
+You should update config using admin user and then create `Task` using user as username. Verify email is sent in smtp4dev.
+
+## Design considerations
+
+Analysing domain I found two subdomains: Task management and Notifications. 
+Task management is straight-forward implementation of CRUD service where some CRUD operations can trigger notifications.  
+Note: input validation and business validation should be implemented. Additionally, there should be scheduled job to change status of tasks to overdue based on current time.  
+
+Implementing Notification System can be done in multiple ways. One naive approach could be to have @Scheduled method to run every minute, fetch tasks and send notifications. 
+I found this solution could lead to complex notification trigger calculations and possible issues like out-of-period notifications based on task creation time.
+
+Applied solution:
+For new tasks and for just assigned tasks, new notification is fired synchronously.
+Instead of having @Scheduled method for notifications based on status and priority (and also for tasks which due date is soon), scheduled jobs are created on Task basis.
+In case of notification config change and application restart, all persisted tasks are rescheduled.  
+Note: corner case like application down-time are not handled even it could be trivial to re-sync status and priority based notifications.

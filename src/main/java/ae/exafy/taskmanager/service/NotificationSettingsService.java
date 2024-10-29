@@ -6,6 +6,7 @@ import ae.exafy.taskmanager.model.Status;
 import ae.exafy.taskmanager.repository.NotificationSettingsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class NotificationSettingsService {
     }
 
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void saveNotificationSettings(NotificationSettingsRequest notificationSettingsRequest) {
 
         NotificationSettings notificationSettings = notificationSettingsRepository.findFirst().orElseGet(() -> notificationSettingsRepository.save(new NotificationSettings()));

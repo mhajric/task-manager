@@ -43,7 +43,7 @@ public class NotificationService {
         LocalDateTime reminderTime = task.getDueDate().minusMinutes(30);
 
         // Convert to cron expression format (minute, hour, day, month)
-        String cronExpression = String.format("%d %d %d %d ?",
+        String cronExpression = String.format("0 %d %d %d %d ?",
                 reminderTime.getMinute(),
                 reminderTime.getHour(),
                 reminderTime.getDayOfMonth(),

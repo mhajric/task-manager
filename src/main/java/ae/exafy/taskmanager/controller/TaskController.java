@@ -4,6 +4,9 @@ import ae.exafy.taskmanager.controller.request.TaskRequest;
 import ae.exafy.taskmanager.controller.response.TaskResponse;
 import ae.exafy.taskmanager.model.Status;
 import ae.exafy.taskmanager.service.TaskService;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,6 +29,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/tasks")
+@SecurityRequirement(name = "basicAuth")
+@OpenAPIDefinition(info = @Info(title = "Tasks API", version = "v1"))
 public class TaskController {
 
     private final TaskService taskService;
