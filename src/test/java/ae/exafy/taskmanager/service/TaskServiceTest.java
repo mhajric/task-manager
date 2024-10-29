@@ -3,6 +3,7 @@ package ae.exafy.taskmanager.service;
 import ae.exafy.taskmanager.controller.request.TaskRequest;
 import ae.exafy.taskmanager.controller.response.TaskResponse;
 import ae.exafy.taskmanager.converter.TaskConverter;
+import ae.exafy.taskmanager.exception.InvalidTaskException;
 import ae.exafy.taskmanager.model.Category;
 import ae.exafy.taskmanager.model.Priority;
 import ae.exafy.taskmanager.model.Status;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -51,7 +53,7 @@ public class TaskServiceTest {
         MockitoAnnotations.openMocks(this);
         String title = "Sample Title";
         String description = "Sample Description";
-        LocalDateTime dueDate = LocalDateTime.now();
+        LocalDateTime dueDate = LocalDateTime.now().plusDays(1);
         Priority priority = Priority.MEDIUM;
         Status status = Status.IN_PROGRESS;
         Category category = Category.PERSONAL;
@@ -100,6 +102,30 @@ public class TaskServiceTest {
         verify(notificationService, never()).notifyTaskAssignment(task);
 
         verify(notificationService).rescheduleTaskNotifications(task);
+    }
+
+    @Test
+    public void testCreateTaskValidation() {
+        when(taskConverter.convertToTask(taskRequest)).thenReturn(task);
+        when(taskRepository.save(task)).thenReturn(task);
+        when(taskConverter.convertToResponse(task)).thenReturn(taskResponse);
+
+        task.setDueDate(LocalDateTime.now().minusDays(1));
+        task.setStatus(Status.IN_PROGRESS);
+
+        assertThrows(InvalidTaskException.class, () -> taskService.createTask( taskRequest));
+    }
+
+    @Test
+    public void testUpdateTaskValidation() {
+        when(taskRepository.findById(1L)).thenReturn(Optional.of(task));
+        when(taskRepository.save(task)).thenReturn(task);
+        when(taskConverter.convertToResponse(task)).thenReturn(taskResponse);
+
+        taskRequest.setDueDate(LocalDateTime.now().minusDays(1));
+        taskRequest.setStatus(Status.IN_PROGRESS);
+
+        assertThrows(InvalidTaskException.class, () -> taskService.updateTask(1L, taskRequest));
     }
 
     @Test

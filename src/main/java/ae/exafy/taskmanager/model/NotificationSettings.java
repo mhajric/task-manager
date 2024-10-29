@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Collections;
 import java.util.List;
 
 
@@ -33,5 +34,5 @@ public class NotificationSettings {
     @ElementCollection(targetClass = Status.class)
     @CollectionTable(name = "enabled_statuses", joinColumns = @JoinColumn(name = "notification_settings_id"))
     @Enumerated(EnumType.STRING)
-    private List<Status> enabledStatuses; // List of enabled statuses for notifications
+    private List<Status> enabledStatuses = Collections.emptyList(); // List of enabled statuses for notifications
 }
